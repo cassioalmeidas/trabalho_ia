@@ -13,6 +13,7 @@ class Perceptron
 
   def treinar()
     puts "Treinando..."
+    puts "Pesos iniciais: #{@pesos}"
     entradas = ler_arquivo('dados/treinamento/perceptron.txt') # carrega dados de treinamento de arquivo
     entradas.map! { |e| e.insert(0, @limiar) } # insere o limiar, em cada amostra de entrada
 
@@ -31,7 +32,8 @@ class Perceptron
         end
       end
     end while (acertou != entradas.size)
-    puts "Aprendeu em #{quando_aprendeu} épocas"
+    puts "Aprendeu em #{@quando_aprendeu} épocas"
+    puts "Pesos finais #{@pesos}"
   end
 
   # classificador
