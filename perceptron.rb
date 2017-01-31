@@ -5,13 +5,13 @@ class Perceptron
   TAXA_APRENDIZADO = 0.01
   
   # Inicializa atributos
-  def initialize()
+  def initialize
     @limiar = -1
     @pesos = Array.new(4) { rand }
     @quando_aprendeu = 0
   end
 
-  def treinar()
+  def treinar!
     puts "Treinando..."
     puts "Pesos iniciais: #{@pesos}"
     entradas = ler_arquivo('dados/treinamento/perceptron.txt') # carrega dados de treinamento de arquivo
@@ -69,5 +69,5 @@ end
 
 # Execução 
 p = Perceptron.new
-p.treinar
+p.treinar!
 p.classificar
