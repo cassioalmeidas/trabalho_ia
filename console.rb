@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require_relative "perceptron.rb"
+require_relative "adaline.rb"
 
 # You can add fixtures and/or initialization code here to make experimenting
 # with your gem easier. You can also use a different console, if you like.
@@ -11,3 +12,4 @@ require_relative "perceptron.rb"
 
 require "irb"
 IRB.start
+

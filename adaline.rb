@@ -2,50 +2,60 @@ class Adaline
 
   attr_accessor :quando_aprendeu, :pesos
 
-  TAXA_APRENDIZADO = 0.01
+  TAXA_APRENDIZADO = 0.0025
+  PRECISAO = 10 ** (-6)
   
   # Inicializa atributos
   def initialize
     @limiar = -1
-    @pesos = Array.new(4) { rand }
+    @pesos = Array.new(5) { rand }
     @quando_aprendeu = 0
   end
 
   def treinar!
     puts "Treinando..."
     puts "Pesos iniciais: #{@pesos}"
-    entradas = ler_arquivo('dados/treinamento/perceptron.txt') # carrega dados de treinamento de arquivo
+    entradas = ler_arquivo('dados/treinamento/adaline.txt') # carrega dados de treinamento de arquivo
     entradas.map! { |e| e.insert(0, @limiar) } # insere o limiar, em cada amostra de entrada
 
+    eqms = Array.new(2) { 0.0 }
+
     begin # Repete até não existir erro, eu seja, até o número de acertos for igual ao total de amostras de treinamento
-      acertou = 0
       @quando_aprendeu += 1
+      eqms[0] = eqms[1]
       entradas.each do |entrada|
-        entrada_preparada = entrada[0..3]
+        entrada_preparada = entrada[0..4]
         u = combinador_linear(entrada_preparada)
-        y = funcao_ativacao(u)
         @pesos.each_with_index do |w, i| 
-          @pesos[i] = w + TAXA_APRENDIZADO * (entrada[4] - y) * entrada[i]
-        end
-        if y == entrada[4]
-          acertou += 1
+          @pesos[i] = w + TAXA_APRENDIZADO * (entrada[5] - u) * entrada[i]
         end
       end
-    end while (acertou != entradas.size)
+      eqms[1] = eqm(entradas)
+    end while ( (eqms[0] - eqms[1]).abs > PRECISAO )
     puts "Aprendeu em #{@quando_aprendeu} épocas"
     puts "Pesos finais #{@pesos}"
   end
 
   # classificador
   def classificar
-    amostras = ler_arquivo('dados/amostras/perceptron.txt')
+    amostras = ler_arquivo('dados/amostras/adaline.txt')
     amostras.map! { |e| e.insert(0, @limiar) } # insere o limiar em cada amostra
 
     amostras.each do |amostra|
       u = combinador_linear(amostra)
       y = funcao_ativacao(u)
-      puts "Amostra: #{amostra[1..3]} : Saída: #{y}"
+      puts "Amostra: #{amostra[1..4]} : Saída: #{y}"
     end
+  end
+
+  # Cálculo  do erro quadrático médio
+  def eqm(entradas)
+    r = 0.0
+    entradas.each do |e|  
+      u = combinador_linear(e[0..4])
+      r += (u - e[4]) ** 2
+    end
+    r/entradas.size
   end
 
   # Função Degrau
@@ -68,6 +78,6 @@ class Adaline
 end
 
 # Execução 
-p = Perceptron.new
+p = Adaline.new
 p.treinar!
 p.classificar
