@@ -44,7 +44,7 @@ class Perceptron
     amostras.each do |amostra|
       u = combinador_linear(amostra)
       y = funcao_ativacao(u)
-      puts "Amostra: #{amostra} : Saída: #{y}"
+      puts "Amostra: #{amostra[1..3]} : Saída: #{y}"
     end
   end
 
