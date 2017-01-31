@@ -4,7 +4,7 @@ class Perceptron
 
   TAXA_APRENDIZADO = 0.01
   
-
+  # Inicializa atributos
   def initialize()
     @limiar = -1
     @pesos = Array.new(4) { rand }
@@ -12,10 +12,11 @@ class Perceptron
   end
 
   def treinar()
-    entradas = ler_arquivo('dados/treinamento/perceptron.txt')
-    entradas.map! { |e| e.insert(0, @limiar) }
+    puts "Treinando..."
+    entradas = ler_arquivo('dados/treinamento/perceptron.txt') # carrega dados de treinamento de arquivo
+    entradas.map! { |e| e.insert(0, @limiar) } # insere o limiar, em cada amostra de entrada
 
-    begin 
+    begin # Repete até não existir erro, eu seja, até o número de acertos for igual ao total de amostras de treinamento
       acertou = 0
       @quando_aprendeu += 1
       entradas.each do |entrada|
@@ -28,11 +29,12 @@ class Perceptron
         if y == entrada[4]
           acertou += 1
         end
-        puts "u: #{y} certo: #{entrada[4]}"
       end
     end while (acertou != entradas.size)
+    puts "Aprendeu em #{quando_aprendeu} épocas"
   end
 
+  # classificador
   def classificar
     amostras = ler_arquivo('dados/amostras/perceptron.txt')
     amostras.map! { |e| e.insert(0, @limiar) }
@@ -40,27 +42,30 @@ class Perceptron
     amostras.each do |amostra|
       u = combinador_linear(amostra)
       y = funcao_ativacao(u)
-      puts "#{amostra} : saída: #{y}"
+      puts "Amostra: #{amostra} : Saída: #{y}"
     end
   end
 
+  # Função Degrau
   def funcao_ativacao(sinal)
-    # Função Degrau
     sinal.negative? ? -1 : 1
   end
 
+  # Combinador linear faz o somatório de todas as entradas(X0..Xn) ponderadas
   def combinador_linear(entradas)
     somatorio = 0
     entradas.each_with_index { |entrada, indice| somatorio += entrada * @pesos[indice] }
     somatorio
   end
 
+  # Função auxiliar para ler arquivo
   def ler_arquivo(arquivo)
     File.foreach(arquivo).map() { |linha| linha.split(' ').map(&:to_f) }
   end
 
 end
 
+# Execução 
 p = Perceptron.new
 p.treinar
 p.classificar
