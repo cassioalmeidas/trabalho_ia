@@ -35,6 +35,8 @@ class Perceptron
 
   def classificar
     amostras = ler_arquivo('dados/amostras/perceptron.txt')
+    amostras.map! { |e| e.insert(0, @limiar) }
+
     amostras.each do |amostra|
       u = combinador_linear(amostra)
       y = funcao_ativacao(u)
@@ -59,6 +61,6 @@ class Perceptron
 
 end
 
-# p = Perceptron.new
-# p.treinar
-# p.classificar
+p = Perceptron.new
+p.treinar
+p.classificar
